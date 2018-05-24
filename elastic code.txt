@@ -1,0 +1,209 @@
+***Elastic search implementation and source code***
+
+--CURl command for importing data--
+
+curl -u ubuntnu:finaltest  -X POST "http://18.188.160.132:9200/stops/stops1/_bulk?pretty&refresh" -H "Content-Type: application/json" --data-binary @stops.json
+
+**Elastic queries**
+number 1:
+This is the first query:
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "name_stop.keyword": "cunard Centre"
+          }
+        }
+      ],
+      "must_not": [],
+      "should": []
+    }
+  },
+  "from": 0,
+  "size": 5000,
+  "sort": [],
+  "aggs": {}
+}
+
+Second sub query using output  stop_id:8817
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "stop_id": "8817"
+          }
+        }
+      ],
+      "must_not": [],
+      "should": []
+    }
+  },
+  "from": 0,
+  "size": 10,
+  "sort": [],
+  "aggs": {}
+}
+
+third sub query using output trip_id.keyword": "6517412-2012_05M-1205BRsa-Saturday-02
+{
+  "query": {
+    "bool": {
+      "must": [],
+      "must_not": [],
+      "should": [
+        {
+          "term": {
+            "trip_id.keyword": "6517412-2012_05M-1205BRsa-Saturday-02"
+          }
+        },
+        {
+          "term": {
+            "trip_id.keyword": "6525424-2012_08A-1208BRwd-Weekday-01"
+          }
+        },
+        {
+          "term": {
+            "trip_id.keyword": "6530677-2012_08A-1208BRsu-Sunday-01"
+          }
+        },
+        {
+          "term": {
+            "trip_id.keyword": "6514255-2012_05M-1205BRwd-Weekday-02"
+          }
+        }
+      ]
+    }
+  },
+  "from": 0,
+  "size": 10,
+  "sort": [],
+  "aggs": {}
+}
+
+number 2:
+This is the first query:
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "range": {
+            "arrival_time.keyword": {
+              "gt": "14:00:00",
+              "lt": "20:00:00"
+            }
+          }
+        }
+      ],
+      "must_not": [],
+      "should": []
+    }
+  },
+  "from": 0,
+  "size": 10,
+  "sort": [],
+  "aggs": {}
+}
+
+Second sub query 
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "trip_id.keyword": "6518384-2012_05M-1205BRsu-Sunday-02"
+          }
+        }
+      ],
+      "must_not": [],
+      "should": []
+    }
+  },
+  "from": 0,
+  "size": 10,
+  "sort": [],
+  "aggs": {}
+}
+
+number 3:
+First query
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "trip_headsign.keyword": "330 HALIFAX "
+          }
+        },
+        {
+          "term": {
+            "route_id.keyword": "330-121"
+          }
+        }
+      ],
+      "must_not": [],
+      "should": []
+    }
+  },
+  "from": 0,
+  "size": 10,
+  "sort": [],
+  "aggs": {}
+}
+
+Second query
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "trip_id.keyword": "6513332-2012_05M-1205BRwd-Weekday-02"
+          }
+        }
+      ],
+      "must_not": [],
+      "should": []
+    }
+  },
+  "from": 0,
+  "size": 10,
+  "sort": [],
+  "aggs": {}
+}
+
+Third query
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "stop_id.keyword": "9061"
+          }
+        }
+      ],
+      "must_not": [],
+      "should": []
+    }
+  },
+  "from": 0,
+  "size": 10,
+  "sort": [],
+  "aggs": {}
+}
+
+number 4:
+First query
+{"query":{"aggs":{"group_by_stop":{"terms":{"field":"stop_id.keyword"}}}}}
+
+Second query
+{"query": {"match":{"stop_id":"8281"}}, "source":"name_stop"}
+
+
